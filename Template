@@ -1,0 +1,135 @@
+package Display;
+
+import Game.Cheack;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.image.BufferStrategy;
+import java.util.Random;
+
+public class Display extends Canvas implements Runnable {
+
+    private static final long serialVersionUID = 1L;
+
+    public Thread thread;
+
+    public static JFrame frame = new JFrame();
+    public static String title ="[Inster Name]";
+    public static final int WIDHT = 1000;
+    public static final int HEIGHT = 1000;
+    public static boolean running = false;
+    public static int frames = 0;
+    public static  int FPS = 0;
+  
+ 
+    public Graphics graph;
+
+
+  
+    public Display(){
+
+
+
+
+    }
+
+
+    public synchronized void start() {
+        running = true;
+        this.thread = new Thread(this,"Display");
+
+        this.thread.start();
+
+    }
+
+    public synchronized void stop() {
+
+        running = false;
+        try {
+            this.thread.join();
+        } catch (InterruptedException e) {
+
+            e.printStackTrace();
+        }
+
+
+
+    }
+
+    @Override
+    public void run() {
+
+        long lastTime = System.nanoTime();
+        long timer = System.currentTimeMillis();
+        final double ns = 1000000000.0 / FPS;
+        double delta  = 0;
+
+
+
+
+        while(running) {
+            long now = System.nanoTime();
+            delta += (now - lastTime)/ns;
+            lastTime = now;
+            while (delta >= 1) {
+                update();
+                delta --;
+
+                render();
+
+                frames++;
+            }
+
+
+            if (System.currentTimeMillis() - timer >1000 ) {
+                timer += 1000;
+                frame.setTitle(title+" || Frames : :" + frames);
+                frames = 0;
+            }
+
+        }
+        stop();
+
+    }
+
+
+
+
+
+    public void update() {
+
+       
+
+    }
+
+
+    private void render() {
+
+
+
+        BufferStrategy bs =  this.getBufferStrategy();
+        if (bs == null) {
+            this.createBufferStrategy(3);
+            return;
+        }
+
+        graph = bs.getDrawGraphics();
+       
+
+
+       
+
+
+
+
+        graph.dispose();
+        bs.show();
+        frame.show();
+
+    }
+
+
+
+
+
+}
