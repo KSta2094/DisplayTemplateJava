@@ -1,6 +1,5 @@
 package Display;
 
-import Game.Cheack;
 
 import javax.swing.*;
 import java.awt.*;
